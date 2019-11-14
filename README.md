@@ -4,4 +4,5 @@ This repository contains an ASP.Net Core API that represents an imaginary websho
 
 Creators:
 Norbert Neudert
+
 Gabor Laczik
