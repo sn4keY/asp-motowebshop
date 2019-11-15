@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MotoWebShop.Common
 {
-    class Model
+    public class Model
     {
         public int Id { get; set; }
 
