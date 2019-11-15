@@ -10,7 +10,11 @@ namespace MotoWebShop.Common
 
         public string Description { get; set; }
 
+        public string PictureURL { get; set; }
+
         public int CategoryId { get; set; }
+
+        public int ModelId { get; set; }
 
         public int Price { get; set; }
     }
