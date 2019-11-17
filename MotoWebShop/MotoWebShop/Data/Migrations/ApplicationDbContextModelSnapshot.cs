@@ -41,6 +41,11 @@ namespace MotoWebShop.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
+                        new { Id = "2", Name = "Customer", NormalizedName = "CUSTOMER" }
+                    );
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -222,7 +227,7 @@ namespace MotoWebShop.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Name");
+                    b.Property<string>("Name");
 
                     b.Property<string>("PictureURL");
 

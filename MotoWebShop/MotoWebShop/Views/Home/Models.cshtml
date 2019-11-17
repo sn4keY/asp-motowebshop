@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Model>
+
+<div class="container">
+    <br />
+    <ul class="list-group">
+        @foreach (var item in Model)
+        {
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-8">@item.Id</div>
+                    <div class="col-sm-1" style="float: right"><img src="~/images/bin.png" style="max-width:24px;width:100%" /></div>
+                    <br />
+                    <br />
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-sm-8">@item.Name</div>
+                            <div class="col-sm-1" style="float: right"><img src="~/images/screwdriver.png" style="max-width:24px;width:100%" /></div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-sm-8">@item.PictureURL</div>
+                            <div class="col-sm-1" style="float: right"><img src="~/images/screwdriver.png" style="max-width:24px;width:100%" /></div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-sm-8">@item.ManufacturerId</div>
+                            <div class="col-sm-1" style="float: right"><img src="~/images/screwdriver.png" style="max-width:24px;width:100%" /></div>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        }
+    </ul>
+</div>

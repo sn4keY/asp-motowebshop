@@ -10,8 +10,8 @@ using MotoWebShop.Data;
 namespace MotoWebShop.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191115095439_added Models, Categires, Items tables")]
-    partial class addedModelsCategiresItemstables
+    [Migration("20191117175417_OnModelCreating")]
+    partial class OnModelCreating
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,11 @@ namespace MotoWebShop.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
+                        new { Id = "2", Name = "Customer", NormalizedName = "CUSTOMER" }
+                    );
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -10,9 +10,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace MotoWebShop.Controllers
 {
+    [Route("[controller]")]
     public class AuthController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -24,8 +26,7 @@ namespace MotoWebShop.Controllers
             _configuration = configuration;
         }
 
-        // /register
-        [Route("register")]
+        [Route("Register")] // /Register
         [HttpPost]
         public async Task<ActionResult> InsertUser([FromBody] RegisterViewModel model)
         {
@@ -43,10 +44,10 @@ namespace MotoWebShop.Controllers
             return Ok(new { Username = user.UserName });
         }
 
-        [Route("login")] // /login
+        [Route("Login")] // /Login
         [HttpPost]
         public async Task<ActionResult> Login([FromBody] LoginViewModel model)
-        {
+        { 
             var user = await _userManager.FindByNameAsync(model.Username);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
@@ -66,6 +67,40 @@ namespace MotoWebShop.Controllers
                   signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256)
                 );
                 ;
+                return Ok(
+                  new
+                  {
+                      token = new JwtSecurityTokenHandler().WriteToken(token),
+                      expiration = token.ValidTo
+                  });
+            }
+            return Unauthorized();
+        }
+
+        [Route("AdminLogin")] // /AdminLogin
+        [HttpPost]
+        public async Task<ActionResult> AdminLogin(LoginViewModel model)
+        {
+            var user = await _userManager.FindByNameAsync(model.Username);
+            var roles = await _userManager.GetRolesAsync(user);
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password) && roles.Contains("Admin"))
+            {
+                var claim = new[] {
+                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                    new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "Admin")
+                };
+                var signinKey = new SymmetricSecurityKey(
+                  Encoding.UTF8.GetBytes(_configuration["Jwt:SigningKey"]));
+
+                int expiryInMinutes = Convert.ToInt32(_configuration["Jwt:ExpiryInMinutes"]);
+
+                var token = new JwtSecurityToken(
+                  issuer: _configuration["Jwt:Site"],
+                  audience: _configuration["Jwt:Site"],
+                  claims: claim,
+                  expires: DateTime.Now.AddMinutes(60),
+                  signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256)
+                );
                 return Ok(
                   new
                   {
