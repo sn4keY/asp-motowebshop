@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -161,19 +162,71 @@ namespace MotoWebShop.MobileApp.Model
             authKey = null;
         }
 
-        public void GetManufacturers()
+        public delegate void GetManufacturersResult(IEnumerable<Manufacturer> manufacturers);
+        public void GetManufacturers(GetManufacturersResult getManufacturersResultHandler)
         {
+            new Thread(() =>
+            {
+                string path = "Manufacturers";
 
+                List<Manufacturer> manufacturers = new List<Manufacturer>();
+                manufacturers.Add(new Manufacturer() { Id = 1, Name = "BMW", PictureURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/150px-BMW.svg.png" });
+                manufacturers.Add(new Manufacturer() { Id = 2, Name = "Suzuki", PictureURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Suzuki_Motor_Corporation_logo.svg/150px-Suzuki_Motor_Corporation_logo.svg.png" });
+
+                Xamarin.Forms.Device.BeginInvokeOnMainThread(() => getManufacturersResultHandler?.Invoke(manufacturers));
+            })
+            .Start();
         }
 
-        public void GetCategories(int manufacturerId)
-        {
 
+        public delegate void GetModelsResult(IEnumerable<Common.Model> models);
+        public void GetModels(int manufacturerId, GetModelsResult getModelsResultHandler)
+        {
+            new Thread(() =>
+            {
+                string path = "Categories";
+
+                List<Common.Model> models = new List<Common.Model>();
+                models.Add(new Common.Model() { Id = 1, ManufacturerId = 1, Name = "F650", PictureURL = "https://www.motorcyclespecs.co.za/Gallery/BMW%20F650%2094.jpg" });
+                models.Add(new Common.Model() { Id = 2, ManufacturerId = 2, Name = "GS500", PictureURL = "http://www.motorrevu.hu/img/galery/galria-500-asok-500-alatt_motorrevu.jpg" });
+
+                Xamarin.Forms.Device.BeginInvokeOnMainThread(() => getModelsResultHandler?.Invoke(models.Where(x => x.ManufacturerId == manufacturerId)));
+            })
+            .Start();
         }
 
-        public void GetItems(int manufacturerId, int categoryId)
+        public delegate void GetCategoriesResult(IEnumerable<Category> categories);
+        public void GetCategories(int manufacturerId, GetCategoriesResult getCategoriesResultHandler)
         {
+            new Thread(() =>
+            {
+                string path = "Categories";
 
+                List<Category> categories = new List<Category>();
+                categories.Add(new Category() { Id = 1, Name = "Piston" });
+                categories.Add(new Category() { Id = 2, Name = "Fueltank" });
+
+                Xamarin.Forms.Device.BeginInvokeOnMainThread(() => getCategoriesResultHandler?.Invoke(categories));
+            })
+            .Start();
+        }
+
+        public delegate void GetItemsResult(IEnumerable<Item> items);
+        public void GetItems(int modelId, int categoryId, GetItemsResult getItemsResultHandler)
+        {
+            new Thread(() =>
+            {
+                string path = "Items";
+
+                List<Item> items = new List<Item>();
+                items.Add(new Item() { Id = 1, CategoryId = 1, ModelId = 1, Name = "Baszott nagy piston", Description="leírásssdad ad ", Price = 1000 });
+                items.Add(new Item() { Id = 2, CategoryId = 1, ModelId = 1, Name = "Baszott nagy könnyű piston", Description="leíráasdsadsadsa", Price=1500 });
+                items.Add(new Item() { Id = 2, CategoryId = 2, ModelId = 2, Name = "Nagy tank", Description="asdsadsasadsadsa", Price=2000 });
+                items.Add(new Item() { Id = 2, CategoryId = 2, ModelId = 2, Name = "Közepes tank", Description = "asdsadsa4d56s", Price=2500 });
+
+                Xamarin.Forms.Device.BeginInvokeOnMainThread(() => getItemsResultHandler?.Invoke(items.Where(x => x.ModelId == modelId && x.CategoryId == categoryId)));
+            })
+            .Start();
         }
     }
 }

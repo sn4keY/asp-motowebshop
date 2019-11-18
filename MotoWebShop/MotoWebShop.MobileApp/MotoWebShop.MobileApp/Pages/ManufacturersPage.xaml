@@ -4,10 +4,17 @@
              x:Class="MotoWebShop.MobileApp.Pages.ManufacturersPage"
              Title="Manufacturers">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <ListView x:Name="ListViewManufacturers" ItemSelected="ListViewManufacturers_ItemSelected">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal">
+                            <Image Aspect="AspectFit" Source="{Binding PictureURL}" WidthRequest="100" HeightRequest="100" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                            <Label Text="{Binding Name}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </ContentPage.Content>
 </ContentPage>

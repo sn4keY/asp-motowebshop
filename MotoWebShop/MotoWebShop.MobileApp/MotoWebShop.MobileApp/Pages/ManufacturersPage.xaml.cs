@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MotoWebShop.Common;
+using MotoWebShop.MobileApp.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +23,21 @@ namespace MotoWebShop.MobileApp.Pages
         {
             base.OnAppearing();
             ToolBar.Make(this);
+            Api.Instance.GetManufacturers(GetManufacturersResultHandler);
+        }
+
+        private void GetManufacturersResultHandler(IEnumerable<Manufacturer> manufacturers)
+        {
+            ListViewManufacturers.ItemsSource = manufacturers;
+        }
+
+        private void ListViewManufacturers_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem == null) return;
+            ListViewManufacturers.SelectedItem = null;
+
+            Manufacturer manufacturer = (Manufacturer)e.SelectedItem;
+            Navigation.PushAsync(new ModelsPage(manufacturer));
         }
     }
 }

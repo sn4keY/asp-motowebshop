@@ -1,6 +1,7 @@
 ﻿using MotoWebShop.MobileApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xamarin.Forms;
 
@@ -13,15 +14,16 @@ namespace MotoWebShop.MobileApp.Pages
             page.ToolbarItems.Clear();
             Api api = Api.Instance;
 
+            ToolbarItem cartItem = new ToolbarItem($"Cart ({Cart.Instance.Items.Sum(x => x.Value)})", "", () => { });
+            cartItem.Order = ToolbarItemOrder.Secondary;
+            cartItem.Clicked += (_, __) => { page.Navigation.PushAsync(new CartPage()); };
+            page.ToolbarItems.Add(cartItem);
+
             if (api.IsLoggedIn)
             {
                 ToolbarItem usernameItem = new ToolbarItem(api.Username, "", () => { });
                 usernameItem.Order = ToolbarItemOrder.Secondary;
                 page.ToolbarItems.Add(usernameItem);
-
-                ToolbarItem cartItem = new ToolbarItem("Cart", "", () => { });
-                cartItem.Order = ToolbarItemOrder.Secondary;
-                page.ToolbarItems.Add(cartItem);
 
                 ToolbarItem logoutItem = new ToolbarItem("Logout", "", () => { });
                 logoutItem.Order = ToolbarItemOrder.Secondary;
