@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MotoWebShop.Common;
+using MotoWebShop.Models;
 
 namespace MotoWebShop.Data
 {
@@ -35,5 +36,7 @@ namespace MotoWebShop.Data
         public DbSet<Model> Models { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<OrderHead> OrderHead { get; set; }
+        public DbSet<OrderBody> OrderBody { get; set; }
     }
 }
