@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MotoWebShop.MobileApp.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,51 @@ namespace MotoWebShop.MobileApp.Pages
 	{
 		public LoginPage ()
 		{
-			InitializeComponent ();
+			InitializeComponent();
 		}
-	}
+
+        public LoginPage(string defaultUsername)
+        {
+            InitializeComponent();
+            EntryUsername.Text = defaultUsername;
+        }
+
+        void LoginResultHandler(bool success)
+        {
+            if (success)
+            {
+                Toast.Show("Logged in");
+                Navigation.PopAsync();
+            }
+            else
+            {
+                SetInputEnabled(true);
+                Toast.Show("Bad password or username");
+            }
+        }
+
+        private void ButtonLogin_Clicked(object sender, EventArgs e)
+        {
+            string username = EntryUsername.Text;
+            string password = EntryPassword.Text;
+
+            if (username.Length > 0 && password.Length > 0)
+            {
+                Api api = Api.Instance;
+                api.Login(username, password, LoginResultHandler);
+                SetInputEnabled(false);
+            }
+            else
+            {
+                Toast.Show("Enter your username and password!");
+            }
+        }
+
+        private void SetInputEnabled(bool enabled)
+        {
+            ButtonLogin.IsEnabled = enabled;
+            EntryUsername.IsEnabled = enabled;
+            EntryPassword.IsEnabled = enabled;
+        }
+    }
 }

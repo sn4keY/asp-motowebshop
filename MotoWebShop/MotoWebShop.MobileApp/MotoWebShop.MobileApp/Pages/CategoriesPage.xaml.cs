@@ -15,6 +15,7 @@ namespace MotoWebShop.MobileApp.Pages
 		public CategoriesPage ()
 		{
 			InitializeComponent ();
+            ToolBar.Make(this);
 		}
 	}
 }
