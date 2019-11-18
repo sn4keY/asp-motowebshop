@@ -59,7 +59,7 @@ namespace MotoWebShop.Controllers
         }
 
         [HttpGet]
-        [Route("categories/{id:int}")]
+        [Route("categories/{catId:int}/{modelId:int}")]
         public ActionResult<IEnumerable<Item>> GetItemsByCategoryAndModel(int catId, int modelId)
         {
             var items = db.Items.Where(x => x.CategoryId == catId && x.ModelId == modelId);
