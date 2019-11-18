@@ -2,53 +2,62 @@
 
 <div class="container">
     <br />
+    <form method="post" action="/Home/AddItem">
+        <div class="form-group">
+            <label>Item's name</label>
+            <input type="text" class="form-control" placeholder="Enter item name" name="Name"/>
+        </div>
+        <div class="form-group">
+            <label>Item's description</label>
+            <input type="text" class="form-control" placeholder="Description" name="Description"/>
+        </div>
+        <div class="form-group">
+            <label>Picture's URL</label>
+            <input type="text" class="form-control" placeholder="Enter the picture's URL" name="PictureURL"/>
+        </div>
+        <div class="form-group">
+            <label>CategoryID</label>
+            <input type="number" class="form-control" placeholder="Enter the category's ID" name="CategoryId"/>
+        </div>
+        <div class="form-group">
+            <label>ModelId</label>
+            <input type="number" class="form-control" placeholder="Enter the model's name" name="ModelId"/>
+        </div>
+        <div class="form-group">
+            <label>Item's price</label>
+            <input type="number" class="form-control" placeholder="Enter itemprice" name="Price"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <hr />
     <ul class="list-group">
         @foreach (var item in Model)
         {
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-sm-8">@item.Id</div>
-                    <div class="col-sm-1" style="float: right"><img src="~/images/bin.png" style="max-width:24px;width:100%" /></div>
+                    <div class="col-sm-1" style="float: right">
+                        <form method="get" action="/Home/EditItem">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="image" src="~/images/screwdriver.png" style="max-width:24px;width:100%" />
+                        </form>
+                    </div>
+                    <div class="col-sm-1" style="float: right">
+                        <form method="post" action="/Home/DeleteItem">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="image" src="~/images/bin.png" style="max-width:24px;width:100%" />
+                        </form>
+                    </div>
                     <br />
                     <br />
                 </div>
                 <ul class="list-group">
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-sm-8">@item.Name</div>
-                            <div class="col-sm-1" style="float: right"><img src="~/images/screwdriver.png" style="max-width:24px;width:100%" /></div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-sm-8">@item.Description</div>
-                            <div class="col-sm-1" style="float: right"><img src="~/images/screwdriver.png" style="max-width:24px;width:100%" /></div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-sm-8">@item.PictureURL</div>
-                            <div class="col-sm-1" style="float: right"><img src="~/images/screwdriver.png" style="max-width:24px;width:100%" /></div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-sm-8">@item.CategoryId</div>
-                            <div class="col-sm-1" style="float: right"><img src="~/images/screwdriver.png" style="max-width:24px;width:100%" /></div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-sm-8">@item.ModelId</div>
-                            <div class="col-sm-1" style="float: right"><img src="~/images/screwdriver.png" style="max-width:24px;width:100%" /></div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-sm-8">@item.Price</div>
-                            <div class="col-sm-1" style="float: right"><img src="~/images/screwdriver.png" style="max-width:24px;width:100%" /></div>
-                        </div>
-                    </li>
+                    <li class="list-group-item"><h4>Item name: </h4>@item.Name</li>
+                    <li class="list-group-item"><h4>Description: </h4>@item.Description</li>
+                    <li class="list-group-item"><h4>Picture URL: </h4>@item.PictureURL</li>
+                    <li class="list-group-item"><h4>CategoryID: </h4>@item.CategoryId</li>
+                    <li class="list-group-item"><h4>ModelID: </h4>@item.ModelId</li>
+                    <li class="list-group-item"><h4>Price: </h4>@item.Price</li>
                 </ul>
             </li>
         }

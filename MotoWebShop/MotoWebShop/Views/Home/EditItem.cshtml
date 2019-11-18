@@ -1,0 +1,32 @@
+﻿@model Item
+
+<h1 class="text-center">Edit item</h1>
+<hr />
+<form method="post" action="/Home/EditItem">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="form-group">
+        <label>Item's name</label>
+        <input type="text" class="form-control" placeholder="Enter item name" name="Name" value="@Model.Name">
+    </div>
+    <div class="form-group">
+        <label>Item's description</label>
+        <input type="text" class="form-control" placeholder="Description" name="Description" value="@Model.Description">
+    </div>
+    <div class="form-group">
+        <label>Picture's URL</label>
+        <input type="text" class="form-control" placeholder="Enter the picture's URL" name="PictureURL" value="@Model.PictureURL">
+    </div>
+    <div class="form-group">
+        <label>CategoryID</label>
+        <input type="number" class="form-control" placeholder="Enter the category's ID" name="CategoryId" value="@Model.CategoryId">
+    </div>
+    <div class="form-group">
+        <label>ModelId</label>
+        <input type="number" class="form-control" placeholder="Enter the model's name" name="ModelId" value="@Model.ModelId">
+    </div>
+    <div class="form-group">
+        <label>Item's price</label>
+        <input type="number" class="form-control" placeholder="Enter itemprice" name="Price" value="@Model.Price">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

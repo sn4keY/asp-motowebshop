@@ -5,8 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MotoWebShop.Common;
 using MotoWebShop.Data;
 using MotoWebShop.Models;
+using MotoWebShop.ViewModels;
 
 namespace MotoWebShop.Controllers
 {
@@ -19,6 +21,7 @@ namespace MotoWebShop.Controllers
             this.db = db;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             return View();
@@ -185,6 +188,48 @@ namespace MotoWebShop.Controllers
             var items = db.Items;
 
             return View(items);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult AddItem(Item model)
+        {
+            db.Items.Add(model);
+            db.SaveChanges();
+
+            return RedirectToAction(nameof(Items));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult DeleteItem(int id)
+        {
+            var model = db.Items.Where(x => x.Id == id).FirstOrDefault();
+            db.Items.Remove(model);
+            db.SaveChanges();
+
+            return RedirectToAction(nameof(Items));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult EditItem(int id)
+        {
+            var model = db.Items.Where(x => x.Id == id).FirstOrDefault();
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult EditItem(Item model)
+        {
+            var delete = db.Items.Where(x => x.Id == model.Id).FirstOrDefault();
+            db.Remove(delete);
+            db.Add(model);
+            db.SaveChanges();
+
+            return RedirectToAction(nameof(Items));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
