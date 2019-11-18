@@ -14,7 +14,13 @@ namespace MotoWebShop.MobileApp.Pages
 	{
 		public ManufacturersPage ()
 		{
-			InitializeComponent ();
+			InitializeComponent();
 		}
-	}
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            ToolBar.Make(this);
+        }
+    }
 }
