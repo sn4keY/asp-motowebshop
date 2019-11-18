@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MotoWebShop.Common;
 using MotoWebShop.Data;
-using MotoWebShop.Models;
 
 namespace MotoWebShop.Controllers
 {
@@ -59,33 +58,12 @@ namespace MotoWebShop.Controllers
         }
 
         [HttpGet]
-        [Route("categories/{id:int}")]
-        public ActionResult<IEnumerable<Item>> GetItemsByCategoryAndModel(int catId, int modelId)
+        [Route("categories/{id:int}/{modelId:int}")]
+        public ActionResult<IEnumerable<Item>> GetItemsByCategoryAndModel(int id, int modelId)
         {
-            var items = db.Items.Where(x => x.CategoryId == catId && x.ModelId == modelId);
+            var items = db.Items.Where(x => x.CategoryId == id && x.ModelId == modelId);
 
             return new JsonResult(items);
-        }
-
-        [HttpPost]
-        [Route("orders")]
-        public void NewOrder([FromBody] string username, [FromBody] Dictionary<int,int> Cart)
-        {
-            db.OrderHead.Add(new OrderHead() { Username = username });
-            db.SaveChanges();
-
-            int orderId = db.OrderHead.Count();
-            foreach (var key in Cart.Keys)
-            {
-                OrderBody tmp = new OrderBody()
-                {
-                    OrderId = orderId,
-                    ItemId = key,
-                    Amount = Cart[key]
-                };
-                db.OrderBody.Add(tmp);
-                db.SaveChanges();
-            }
         }
     }
 }

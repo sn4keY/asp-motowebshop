@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MotoWebShop.MobileApp.Model
 {
@@ -68,30 +69,33 @@ namespace MotoWebShop.MobileApp.Model
         public string Username { get; private set; }
         public string Password { get; private set; }
 
-        private Response GetResult(string path, Dictionary<string, string> data)
+        private async Task<Response> PostData(string path, Dictionary<string, string> data)
         {
             try
             {
+                if (data == null)
+                {
+                    data = new Dictionary<string, string>();
+                }
+
                 string fullUrl = url + path;
                 Console.WriteLine($"URL: {fullUrl}");
 
                 string jsonData = JsonConvert.SerializeObject(data);
-                var task = client.PostAsync(fullUrl, new StringContent(jsonData, Encoding.UTF8, "application/json"));
-                task.Wait();
-                var task2 = task.Result.Content.ReadAsStringAsync();
-                task2.Wait();
-                Console.WriteLine($"Result code: {task.Result.StatusCode}");
-                Console.WriteLine($"Result:\n{task2.Result}");
-                return new Response(task2.Result, task.Result.StatusCode, task.Result.IsSuccessStatusCode);
+                var task = await client.PostAsync(fullUrl, new StringContent(jsonData, Encoding.UTF8, "application/json"));
+                var task2 = await task.Content.ReadAsStringAsync();
+                Console.WriteLine($"Result code: {task.StatusCode}");
+                Console.WriteLine($"Result:\n{task2}");
+                return new Response(task2, task.StatusCode, task.IsSuccessStatusCode);
             }
-            catch(AggregateException ex)
+            catch (AggregateException ex)
             {
-                foreach(var e in ex.InnerExceptions)
+                foreach (var e in ex.InnerExceptions)
                 {
                     Console.WriteLine(e.Message);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -99,62 +103,61 @@ namespace MotoWebShop.MobileApp.Model
             return new Response("", HttpStatusCode.ServiceUnavailable, false);
         }
 
-        public delegate void LoginResult(bool success);
-        public void Login(string username, string password, LoginResult loginResultHandler)
+        private async Task<Response> GetData(string path)
         {
-            new Thread(() =>
-            {
-                string path = "Auth/Login";
-                Dictionary<string, string> data = new Dictionary<string, string>();
-                data.Add("username", username);
-                data.Add("password", password);
-                var res = GetResult(path, data);
+            string fullUrl = url + path;
+            Console.WriteLine($"URL: {fullUrl}");
+            var task = await client.GetAsync(fullUrl);
+            string json = await task.Content.ReadAsStringAsync();
 
-                var resData = res.As<Dictionary<string, string>>();
-
-                if (resData != null && resData.ContainsKey("token"))
-                {
-                    this.authKey = resData["token"];
-                    this.authExpiration = DateTime.Parse(resData["expiration"]);
-                    this.Username = username;
-                    this.Password = password;
-                    Xamarin.Forms.Device.BeginInvokeOnMainThread(() => loginResultHandler?.Invoke(true));
-                }
-                else
-                {
-                    Xamarin.Forms.Device.BeginInvokeOnMainThread(() => loginResultHandler?.Invoke(false));
-                }
-
-                Console.WriteLine(res.Text);
-            })
-            .Start();
+            return new Response(json, task.StatusCode, task.IsSuccessStatusCode);
         }
 
-        public delegate void RegisterResult(bool success);
-        public void Register(string username, string password, RegisterResult registerResultHandler)
+        public async Task<bool> Login(string username, string password)
         {
-            new Thread(() =>
+
+            string path = "Auth/Login";
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            data.Add("username", username);
+            data.Add("password", password);
+            var res = await PostData(path, data);
+
+            var resData = res.As<Dictionary<string, string>>();
+
+            if (resData != null && resData.ContainsKey("token"))
             {
-                string path = "Auth/Register";
-                Dictionary<string, string> data = new Dictionary<string, string>();
-                data.Add("email", username);
-                data.Add("password", password);
-                var res = GetResult(path, data);
+                this.authKey = resData["token"];
+                this.authExpiration = DateTime.Parse(resData["expiration"]);
+                this.Username = username;
+                this.Password = password;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
 
-                var resData = res.As<Dictionary<string, string>>();
+        }
 
-                if (resData != null && resData.ContainsKey("username") && resData["username"] == username)
-                {
-                    Xamarin.Forms.Device.BeginInvokeOnMainThread(() => registerResultHandler?.Invoke(true));
-                }
-                else
-                {
-                    Xamarin.Forms.Device.BeginInvokeOnMainThread(() => registerResultHandler?.Invoke(false));
-                }
+        public async Task<bool> Register(string username, string password)
+        {
 
-                Console.WriteLine(res.Text);
-            })
-            .Start();
+            string path = "Auth/Register";
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            data.Add("email", username);
+            data.Add("password", password);
+            var res = await PostData(path, data);
+
+            var resData = res.As<Dictionary<string, string>>();
+
+            if (resData != null && resData.ContainsKey("username") && resData["username"] == username)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void Logout()
@@ -162,71 +165,32 @@ namespace MotoWebShop.MobileApp.Model
             authKey = null;
         }
 
-        public delegate void GetManufacturersResult(IEnumerable<Manufacturer> manufacturers);
-        public void GetManufacturers(GetManufacturersResult getManufacturersResultHandler)
+        public async Task<IEnumerable<Manufacturer>> GetManufacturers()
         {
-            new Thread(() =>
-            {
-                string path = "Manufacturers";
-
-                List<Manufacturer> manufacturers = new List<Manufacturer>();
-                manufacturers.Add(new Manufacturer() { Id = 1, Name = "BMW", PictureURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/150px-BMW.svg.png" });
-                manufacturers.Add(new Manufacturer() { Id = 2, Name = "Suzuki", PictureURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Suzuki_Motor_Corporation_logo.svg/150px-Suzuki_Motor_Corporation_logo.svg.png" });
-
-                Xamarin.Forms.Device.BeginInvokeOnMainThread(() => getManufacturersResultHandler?.Invoke(manufacturers));
-            })
-            .Start();
+            string path = "api/Values/manufacturers";
+            var res = await GetData(path);
+            return res.As<List<Manufacturer>>();
         }
 
-
-        public delegate void GetModelsResult(IEnumerable<Common.Model> models);
-        public void GetModels(int manufacturerId, GetModelsResult getModelsResultHandler)
+        public async Task<IEnumerable<Common.Model>> GetModels(int manufacturerId)
         {
-            new Thread(() =>
-            {
-                string path = "Categories";
-
-                List<Common.Model> models = new List<Common.Model>();
-                models.Add(new Common.Model() { Id = 1, ManufacturerId = 1, Name = "F650", PictureURL = "https://www.motorcyclespecs.co.za/Gallery/BMW%20F650%2094.jpg" });
-                models.Add(new Common.Model() { Id = 2, ManufacturerId = 2, Name = "GS500", PictureURL = "http://www.motorrevu.hu/img/galery/galria-500-asok-500-alatt_motorrevu.jpg" });
-
-                Xamarin.Forms.Device.BeginInvokeOnMainThread(() => getModelsResultHandler?.Invoke(models.Where(x => x.ManufacturerId == manufacturerId)));
-            })
-            .Start();
+            string path = $"api/Values/manufacturers/{manufacturerId}";
+            var res = await GetData(path);
+            return res.As<List<Common.Model>>();
         }
 
-        public delegate void GetCategoriesResult(IEnumerable<Category> categories);
-        public void GetCategories(int manufacturerId, GetCategoriesResult getCategoriesResultHandler)
+        public async Task<IEnumerable<Category>> GetCategories()
         {
-            new Thread(() =>
-            {
-                string path = "Categories";
-
-                List<Category> categories = new List<Category>();
-                categories.Add(new Category() { Id = 1, Name = "Piston" });
-                categories.Add(new Category() { Id = 2, Name = "Fueltank" });
-
-                Xamarin.Forms.Device.BeginInvokeOnMainThread(() => getCategoriesResultHandler?.Invoke(categories));
-            })
-            .Start();
+            string path = "api/Values/categories";
+            var res = await GetData(path);
+            return res.As<List<Category>>();
         }
 
-        public delegate void GetItemsResult(IEnumerable<Item> items);
-        public void GetItems(int modelId, int categoryId, GetItemsResult getItemsResultHandler)
+        public async Task<IEnumerable<Item>> GetItems(int modelId, int categoryId)
         {
-            new Thread(() =>
-            {
-                string path = "Items";
-
-                List<Item> items = new List<Item>();
-                items.Add(new Item() { Id = 1, CategoryId = 1, ModelId = 1, Name = "Baszott nagy piston", Description="leírásssdad ad ", Price = 1000 });
-                items.Add(new Item() { Id = 2, CategoryId = 1, ModelId = 1, Name = "Baszott nagy könnyű piston", Description="leíráasdsadsadsa", Price=1500 });
-                items.Add(new Item() { Id = 2, CategoryId = 2, ModelId = 2, Name = "Nagy tank", Description="asdsadsasadsadsa", Price=2000 });
-                items.Add(new Item() { Id = 2, CategoryId = 2, ModelId = 2, Name = "Közepes tank", Description = "asdsadsa4d56s", Price=2500 });
-
-                Xamarin.Forms.Device.BeginInvokeOnMainThread(() => getItemsResultHandler?.Invoke(items.Where(x => x.ModelId == modelId && x.CategoryId == categoryId)));
-            })
-            .Start();
+            string path = $"api/Values/categories/{categoryId}/{modelId}";
+            var res = await GetData(path);
+            return res.As<List<Item>>();
         }
     }
 }

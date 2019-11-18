@@ -18,30 +18,27 @@ namespace MotoWebShop.MobileApp.Pages
 			InitializeComponent ();
 		}
 
-        private void RegisterResultHandler(bool success)
-        {
-            if (success)
-            {
-                Toast.Show("Registered successfully");
-                Navigation.PopAsync();
-                Navigation.PushAsync(new LoginPage(EntryUsername.Text));
-            }
-            else
-            {
-                Toast.Show("An error occured!");
-                SetInputEnabled(true);
-            }
-        }
-
-        private void ButtonRegister_Clicked(object sender, EventArgs e)
+        private async void ButtonRegister_Clicked(object sender, EventArgs e)
         {
             string username = EntryUsername.Text;
             string password = EntryPassword.Text;
 
             if (username.Length > 0 && password.Length > 0)
             {
-                Api.Instance.Register(username, password, RegisterResultHandler);
                 SetInputEnabled(false);
+                bool result = await Api.Instance.Register(username, password);
+
+                if (result)
+                {
+                    Toast.Show("Registered successfully");
+                    Navigation.PopAsync();
+                    Navigation.PushAsync(new LoginPage(EntryUsername.Text));
+                }
+                else
+                {
+                    Toast.Show("An error occured!");
+                    SetInputEnabled(true);
+                }
             }
             else
             {

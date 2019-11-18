@@ -27,11 +27,11 @@ namespace MotoWebShop.MobileApp.Pages
             this.model = model;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
             ToolBar.Make(this);
-            Api.Instance.GetCategories(model.ManufacturerId, GetCategoriesResultHandler);
+            ListViewCategories.ItemsSource = await Api.Instance.GetCategories();
         }
 
         private void GetCategoriesResultHandler(IEnumerable<Category> categories)
