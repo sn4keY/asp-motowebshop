@@ -1,1 +1,22 @@
-﻿
+﻿<br />
+<h1 class="text-center">Orders</h1>
+<hr />
+@foreach (var item in (IEnumerable<OrderHead>)ViewData["OrderHead"])
+{
+    <ul class="list-group">
+        <li class="list-group-item">
+            <p>@item.Username &nbsp; @item.Id</p>
+            @foreach (var orderItem in (IEnumerable<OrderBody>)ViewData["OrderBody"])
+            {
+                @if (@item.Id == orderItem.OrderId)
+                {
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <p>ItemID: @orderItem.ItemId &nbsp; Amount: @orderItem.Amount</p>
+                        </li>
+                    </ul>
+                }
+            }
+        </li>
+    </ul>
+}

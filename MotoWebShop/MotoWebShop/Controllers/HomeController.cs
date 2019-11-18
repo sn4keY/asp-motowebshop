@@ -21,9 +21,15 @@ namespace MotoWebShop.Controllers
             this.db = db;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
+            var orderHead = db.OrderHead;
+            var orderBody = db.OrderBody;
+
+            ViewData["OrderHead"] = orderHead;
+            ViewData["OrderBody"] = orderBody;
+
             return View();
         }
 
