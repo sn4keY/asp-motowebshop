@@ -88,6 +88,48 @@ namespace MotoWebShop.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult AddModel(Model model)
+        {
+            db.Models.Add(model);
+            db.SaveChanges();
+
+            return RedirectToAction(nameof(Models));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult DeleteModel(int id)
+        {
+            var model = db.Models.Where(x => x.Id == id).FirstOrDefault();
+            db.Models.Remove(model);
+            db.SaveChanges();
+
+            return RedirectToAction(nameof(Models));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult EditModel(int id)
+        {
+            var model = db.Models.Where(x => x.Id == id).FirstOrDefault();
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult EditModel(Model model)
+        {
+            var delete = db.Models.Where(x => x.Id == model.Id).FirstOrDefault();
+            db.Remove(delete);
+            db.Add(model);
+            db.SaveChanges();
+
+            return RedirectToAction(nameof(Models));
+        }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Categories()
         {
             var categories = db.Categories;
