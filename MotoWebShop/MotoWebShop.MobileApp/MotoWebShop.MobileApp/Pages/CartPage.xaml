@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MotoWebShop.MobileApp.Pages.CartPage"
+             Title="Cart">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Margin="10" x:Name="labelTotalPrice"/>
+            <ListView x:Name="ListViewCartItems" HasUnevenRows="True" ItemSelected="ListViewCartItems_ItemSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Margin="10">
+                                <StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Margin="10" Text="{Binding Key.Name}" VerticalOptions="CenterAndExpand"/>
+                                        <Label Margin="10" Text="{Binding Key.Price}" VerticalOptions="CenterAndExpand"/>
+                                        <Label Margin="10" Text="{Binding Value}" VerticalOptions="CenterAndExpand"/>
+                                    </StackLayout>
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
