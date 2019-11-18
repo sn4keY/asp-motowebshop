@@ -86,5 +86,22 @@ namespace MotoWebShop.MobileApp.Pages
 
             }
         }
+
+        private async void ButtonSendOrder_Clicked(object sender, EventArgs e)
+        {
+            if (Api.Instance.IsLoggedIn)
+            {
+                bool result = await Api.Instance.SendOrder();
+                if (result)
+                {
+                    ListViewCartItems.ItemsSource = null;
+                    Navigation.PopAsync();
+                }
+            }
+            else
+            {
+                Navigation.PushAsync(new LoginPage());
+            }
+        }
     }
 }

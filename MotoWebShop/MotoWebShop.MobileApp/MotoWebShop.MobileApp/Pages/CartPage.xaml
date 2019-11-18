@@ -23,6 +23,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Button x:Name="ButtonSendOrder" Text="Send order" Clicked="ButtonSendOrder_Clicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

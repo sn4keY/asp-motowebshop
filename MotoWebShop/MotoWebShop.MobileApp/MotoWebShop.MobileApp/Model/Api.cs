@@ -192,5 +192,37 @@ namespace MotoWebShop.MobileApp.Model
             var res = await GetData(path);
             return res.As<List<Item>>();
         }
+
+        public async Task<bool> SendOrder()
+        {
+            if (IsLoggedIn)
+            {
+                string path = "api/Values/orders";
+                string fullUrl = url + path;
+
+                NewOrderPostModel newOrder = new NewOrderPostModel();
+                newOrder.username = this.Username;
+                newOrder.Cart = new Dictionary<int, int>();
+
+                HttpClient client = new HttpClient(new HttpClientHandler());
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + authKey);
+                client.DefaultRequestHeaders.Add("username", newOrder.username);
+
+                foreach (var item in Cart.Instance.Items)
+                {
+                    newOrder.Cart.Add(item.Key.Id, item.Value);
+                }
+
+                await client.PostAsync(fullUrl, new StringContent(JsonConvert.SerializeObject(newOrder.Cart), Encoding.UTF8, "application/json"));
+                Toast.Show("Order sent!");
+                Cart.Instance.Items.Clear();
+                return true;
+            }
+            else
+            {
+                Toast.Show("You are not signed in!");
+                return false;
+            }
+        }
     }
 }
