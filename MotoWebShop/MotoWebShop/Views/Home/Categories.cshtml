@@ -2,23 +2,37 @@
 
 <div class="container">
     <br />
+    <form method="post" action="/Home/AddCategory">
+        <div class="form-group">
+            <label>Category's name</label>
+            <input type="text" class="form-control" placeholder="Enter category name" name="Name">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <hr />
     <ul class="list-group">
         @foreach (var item in Model)
         {
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-sm-8">@item.Id</div>
-                    <div class="col-sm-1" style="float: right"><img src="~/images/bin.png" style="max-width:24px;width:100%" /></div>
+                    <div class="col-sm-1" style="float: right">
+                        <form method="get" action="/Home/EditCategory">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="image" src="~/images/screwdriver.png" style="max-width:24px;width:100%" />
+                        </form>
+                    </div>
+                    <div class="col-sm-1" style="float: right">
+                        <form method="post" action="/Home/DeleteCategory">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="image" src="~/images/bin.png" style="max-width:24px;width:100%" />
+                        </form>
+                    </div>
                     <br />
                     <br />
                 </div>
                 <ul class="list-group">
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-sm-8">@item.Name</div>
-                            <div class="col-sm-1" style="float: right"><img src="~/images/screwdriver.png" style="max-width:24px;width:100%" /></div>
-                        </div>
-                    </li>
+                    <li class="list-group-item"><h4>Category name: </h4>@item.Name</li>
                 </ul>
             </li>
         }

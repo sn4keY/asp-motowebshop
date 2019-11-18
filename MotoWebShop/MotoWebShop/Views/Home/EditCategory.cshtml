@@ -1,0 +1,12 @@
+﻿@model Category
+
+<h1 class="text-center">Edit categor</h1>
+<hr />
+<form method="post" action="/Home/EditCategory">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="form-group">
+        <label>Category's name</label>
+        <input type="text" class="form-control" placeholder="Enter category name" name="Name" value="@Model.Name">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
