@@ -69,7 +69,7 @@ namespace MotoWebShop.Controllers
 
         [HttpPost]
         [Route("orders")]
-        public void NewOrder(string username, [FromBody] Dictionary<int,int> Cart)
+        public void NewOrder([FromHeader] string username, [FromBody] Dictionary<int,int> Cart)
         {
             db.OrderHead.Add(new OrderHead() { Username = username });
             db.SaveChanges();
