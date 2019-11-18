@@ -4,7 +4,7 @@
              x:Class="MotoWebShop.MobileApp.Pages.CategoriesPage"
              Title="Categories">
     <ContentPage.Content>
-        <ListView x:Name="ListViewCategories" ItemSelected="ListViewCategories_ItemSelected">
+        <ListView x:Name="ListViewCategories" HasUnevenRows="True" ItemSelected="ListViewCategories_ItemSelected">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>

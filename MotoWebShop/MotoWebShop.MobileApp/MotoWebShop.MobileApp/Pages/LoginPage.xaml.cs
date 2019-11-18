@@ -24,21 +24,7 @@ namespace MotoWebShop.MobileApp.Pages
             EntryUsername.Text = defaultUsername;
         }
 
-        void LoginResultHandler(bool success)
-        {
-            if (success)
-            {
-                Toast.Show("Logged in");
-                Navigation.PopAsync();
-            }
-            else
-            {
-                SetInputEnabled(true);
-                Toast.Show("Bad password or username");
-            }
-        }
-
-        private void ButtonLogin_Clicked(object sender, EventArgs e)
+        private async void ButtonLogin_Clicked(object sender, EventArgs e)
         {
             string username = EntryUsername.Text;
             string password = EntryPassword.Text;
@@ -46,8 +32,19 @@ namespace MotoWebShop.MobileApp.Pages
             if (username.Length > 0 && password.Length > 0)
             {
                 Api api = Api.Instance;
-                api.Login(username, password, LoginResultHandler);
                 SetInputEnabled(false);
+                bool result = await api.Login(username, password);
+
+                if (result)
+                {
+                    Toast.Show("Logged in");
+                    Navigation.PopAsync();
+                }
+                else
+                {
+                    SetInputEnabled(true);
+                    Toast.Show("Bad password or username");
+                }
             }
             else
             {

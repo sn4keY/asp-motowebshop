@@ -29,16 +29,11 @@ namespace MotoWebShop.MobileApp.Pages
             this.category = category;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
             ToolBar.Make(this);
-            Api.Instance.GetItems(model.Id, category.Id, GetItemsResultHandler);
-        }
-
-        private void GetItemsResultHandler(IEnumerable<Item> items)
-        {
-            ListViewItems.ItemsSource = items;
+            ListViewItems.ItemsSource = await Api.Instance.GetItems(model.Id, category.Id);
         }
 
         private void ListViewItems_ItemSelected(object sender, SelectedItemChangedEventArgs e)
