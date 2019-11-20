@@ -9,10 +9,17 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Orientation="Horizontal">
-                            <Image Aspect="AspectFit" Source="{Binding PictureURL}" WidthRequest="100" HeightRequest="100" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+                            <Image Aspect="AspectFit" Source="{Binding PictureURL}" WidthRequest="50" HeightRequest="50" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
                             <StackLayout Orientation="Vertical">
                                 <Label Margin="10" Text="{Binding Name}"/>
-                                <Label Margin="10" Text="{Binding Price}"/>
+                                <Label Margin="10">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Price}"/>
+                                            <Span Text=" HUF"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                             </StackLayout>
                         </StackLayout>
                     </ViewCell>

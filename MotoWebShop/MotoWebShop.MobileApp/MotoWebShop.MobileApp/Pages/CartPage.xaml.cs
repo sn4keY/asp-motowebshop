@@ -53,7 +53,7 @@ namespace MotoWebShop.MobileApp.Pages
                 buttons.Add($"Remove {i}");
             }
 
-            string result = await DisplayActionSheet(item.Name, "Cancel", "X", buttons.ToArray());
+            string result = await DisplayActionSheet(item.Name, "Cancel", "", buttons.ToArray());
 
             switch(result)
             {
@@ -95,7 +95,7 @@ namespace MotoWebShop.MobileApp.Pages
                 if (result)
                 {
                     ListViewCartItems.ItemsSource = null;
-                    Navigation.PopAsync();
+                    Navigation.PopToRootAsync();
                 }
             }
             else

@@ -33,8 +33,9 @@ namespace MotoWebShop.MobileApp.Pages
             base.OnAppearing();
             ToolBar.Make(this);
 
+            imagePicture.Source = item.PictureURL;
             labelName.Text = $"Name: {item.Name}";
-            labelPrice.Text = $"Price: {item.Price}";
+            labelPrice.Text = $"Price: {item.Price} HUF";
             labelDescription.Text = item.Description;
         }
 

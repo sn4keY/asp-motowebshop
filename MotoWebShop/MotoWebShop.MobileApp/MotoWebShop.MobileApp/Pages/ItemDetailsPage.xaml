@@ -5,13 +5,13 @@
              Title="Item details">
     <ContentPage.Content>
         <StackLayout>
-            <Image Aspect="AspectFit" Source="{Binding PictureURL}" WidthRequest="100" HeightRequest="100" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
+            <Image Aspect="AspectFit" x:Name="imagePicture" WidthRequest="100" HeightRequest="100"/>
             <Label x:Name="labelName"/>
             <Label x:Name="labelPrice"/>
             <Label x:Name="labelDescription"/>
             <StackLayout Orientation="Horizontal">
                 <Entry x:Name="EntryAmount" Placeholder="Amount" Keyboard="Numeric"/>
-                <Button x:Name="ButtonCart" Text="Cart" Clicked="ButtonCart_Clicked"/>
+                <Button x:Name="ButtonCart" Text="Add to cart" Clicked="ButtonCart_Clicked"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
