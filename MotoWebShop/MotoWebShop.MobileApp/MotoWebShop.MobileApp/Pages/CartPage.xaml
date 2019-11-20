@@ -13,6 +13,7 @@
                             <StackLayout Margin="10">
                                 <StackLayout>
                                     <StackLayout Orientation="Horizontal">
+                                        <Image Aspect="AspectFit" Source="{Binding Key.PictureURL}" WidthRequest="50" HeightRequest="50"/>
                                         <Label Margin="10" Text="{Binding Key.Name}" VerticalOptions="CenterAndExpand"/>
                                         <Label Margin="10" Text="{Binding Key.Price}" VerticalOptions="CenterAndExpand"/>
                                         <Label Margin="10" Text="{Binding Value}" VerticalOptions="CenterAndExpand"/>
