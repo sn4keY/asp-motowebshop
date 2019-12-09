@@ -44,40 +44,7 @@ namespace MotoWebShop.Controllers
             return Ok(new { Username = user.UserName });
         }
 
-        [HttpPost]
         [Route("Login")] // /Login
-        public async Task<ActionResult> Login([FromBody] LoginViewModel model)
-        {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-            {
-                var claim = new[] {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName)
-                };
-                var signinKey = new SymmetricSecurityKey(
-                  Encoding.UTF8.GetBytes(_configuration["Jwt:SigningKey"]));
-
-                int expiryInMinutes = Convert.ToInt32(_configuration["Jwt:ExpiryInMinutes"]);
-
-                var token = new JwtSecurityToken(
-                  issuer: _configuration["Jwt:Site"],
-                  audience: _configuration["Jwt:Site"],
-                  claims: claim,
-                  expires: DateTime.Now.AddMinutes(60),
-                  signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256)
-                );
-                ;
-                return Ok(
-                  new
-                  {
-                      token = new JwtSecurityTokenHandler().WriteToken(token),
-                      expiration = token.ValidTo
-                  });
-            }
-            return Unauthorized();
-        }
-
-        [Route("AdminLogin")] // /AdminLogin
         [HttpPost]
         public async Task<ActionResult> AdminLogin(LoginViewModel model)
         {
@@ -86,11 +53,12 @@ namespace MotoWebShop.Controllers
             if (user != null)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                if (await _userManager.CheckPasswordAsync(user, model.Password) && roles.Contains("Admin"))
+                var role = roles.Contains("Admin") ? "Admin" : "User";
+                if (await _userManager.CheckPasswordAsync(user, model.Password))
                 {
                     var claim = new[] {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                    new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "Admin")
+                    new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", role)
                 };
                     var signinKey = new SymmetricSecurityKey(
                       Encoding.UTF8.GetBytes(_configuration["Jwt:SigningKey"]));
