@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MotoWebShop.MobileApp.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,12 @@ namespace MotoWebShop.MobileApp
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Navigation.PushAsync(new ManufacturersPage());
         }
     }
 }

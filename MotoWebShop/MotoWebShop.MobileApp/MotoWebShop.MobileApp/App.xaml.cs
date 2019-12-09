@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MotoWebShop.MobileApp.Pages;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -7,26 +8,28 @@ namespace MotoWebShop.MobileApp
 {
     public partial class App : Application
     {
-        public App()
+        public App(IToast toast = null)
         {
+            Toast.Handler = toast;
+
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new NavigationPage(new ManufacturersPage());
         }
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+
         }
 
         protected override void OnSleep()
         {
-            // Handle when your app sleeps
+
         }
 
         protected override void OnResume()
         {
-            // Handle when your app resumes
+
         }
     }
 }
