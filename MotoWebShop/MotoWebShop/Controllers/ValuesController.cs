@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MotoWebShop.Common;
@@ -67,6 +68,7 @@ namespace MotoWebShop.Controllers
             return new JsonResult(items);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("orders")]
         public void NewOrder([FromHeader] string username, [FromBody] Dictionary<int,int> Cart)
